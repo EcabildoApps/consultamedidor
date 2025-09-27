@@ -1,17 +1,14 @@
-# Dockerfile para Next.js exportado
-FROM node:18-alpine
+# Dockerfile
+FROM nginx:alpine
 
-# Crear directorio de trabajo
-WORKDIR /app
+# Copiar los archivos exportados de Next.js
+COPY out/ /usr/share/nginx/html
 
-# Instalar serve globalmente
-RUN npm install -g serve
+# Copiar configuración personalizada de Nginx (opcional)
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Copiar los archivos estáticos exportados
-COPY out/ /app
+# Exponer el puerto 80
+EXPOSE 80
 
-# Exponer el puerto 3002
-EXPOSE 3002
-
-# Comando para servir la carpeta 'out'
-CMD ["serve", "-s", ".", "-l", "3002"]
+# Comando por defecto
+CMD ["nginx", "-g", "daemon off;"]
