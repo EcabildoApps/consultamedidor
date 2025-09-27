@@ -1,103 +1,96 @@
-import Image from "next/image";
+"use client";
 
-export default function Home() {
+import { useEffect, useState } from "react";
+import MapComponent from "./MapComponent";
+import axios from "axios";
+import "./style.css";
+
+interface Lectura {
+  NRO_MEDIDOR: string;
+  NRO_CUENTA: string;
+  CIU: string;
+  CONSUMIDOR: string;
+  CEDULA_RUC: string;
+  LATITUD: number;
+  LONGITUD: number;
+  DIRECCION: string;
+}
+
+export default function MainPage() {
+  const [lecturas, setLecturas] = useState<Lectura[]>([]);
+  const [busqueda, setBusqueda] = useState<string>(""); // Para el buscador
+  const [lecturasFiltradas, setLecturasFiltradas] = useState<Lectura[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "https://lecturagua.e-cabildoapps.com/api/auth/obtenerCoordenadas"
+        );
+        setLecturas(response.data?.data || []);
+        setLecturasFiltradas(response.data?.data || []);
+      } catch (error) {
+        console.error("Error al obtener coordenadas:", error);
+
+        // Datos de prueba mientras la API falla
+        const datosPrueba: Lectura[] = [
+          {
+            NRO_MEDIDOR: "00001",
+            NRO_CUENTA: "123",
+            CIU: "1001",
+            CONSUMIDOR: "Consumidor de prueba",
+            CEDULA_RUC: "0101010101",
+            LATITUD: -2.7801543,
+            LONGITUD: -78.7616523,
+            DIRECCION: "Dirección de prueba",
+          },
+          {
+            NRO_MEDIDOR: "00002",
+            NRO_CUENTA: "124",
+            CIU: "1002",
+            CONSUMIDOR: "Consumidor 2",
+            CEDULA_RUC: "0101010102",
+            LATITUD: -2.781,
+            LONGITUD: -78.762,
+            DIRECCION: "Otra dirección",
+          },
+        ];
+        setLecturas(datosPrueba);
+        setLecturasFiltradas(datosPrueba);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  // Filtrar lecturas según la búsqueda
+  useEffect(() => {
+    const filtered = lecturas.filter(
+      (lectura) =>
+        lectura.NRO_MEDIDOR.includes(busqueda) ||
+        lectura.NRO_CUENTA.includes(busqueda) ||
+        lectura.CONSUMIDOR.toLowerCase().includes(busqueda.toLowerCase())
+    );
+    setLecturasFiltradas(filtered);
+  }, [busqueda, lecturas]);
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="map-container">
+      {/* Logo arriba a la izquierda */}
+      <img src="/paute.png" alt="Logo" className="logo" />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      {/* Buscador abajo a la derecha */}
+      <div className="search-box">
+        <input
+          type="text"
+          placeholder="Buscar por medidor, cuenta o consumidor..."
+          value={busqueda}
+          onChange={(e) => setBusqueda(e.target.value)}
+        />
+      </div>
+
+      {/* Mapa */}
+      <MapComponent lecturasFiltradas={lecturasFiltradas} />
     </div>
   );
 }

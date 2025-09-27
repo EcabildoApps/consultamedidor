@@ -1,26 +1,94 @@
-@import "tailwindcss";
+/* Importa Tailwind CSS */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
+/* Variables de colores y fuentes */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary-color: #4CAF50;
+  /* Verde base */
+  --secondary-color: #8c8c8c;
+  --font-sans: 'Arial', Helvetica, sans-serif;
+  --font-mono: 'Courier New', monospace;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* Tema oscuro */
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    --primary-color: #6c9c3f;
+    /* Verde más suave */
   }
 }
 
+/* Estilo global */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  margin: 0;
+  padding: 0;
 }
+
+/* Links */
+a {
+  color: var(--primary-color);
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--secondary-color);
+}
+
+html,
+body,
+#__next {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.map-container {
+  height: 100vh; /* altura total de la pantalla */
+  width: 100%;
+}
+
+/* Contenedor principal del mapa */
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+}
+
+/* Logo en la esquina superior izquierda */
+.logo {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 10;
+  width: 120px;
+}
+
+/* Buscador en la esquina inferior derecha */
+.search-box {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  z-index: 10;
+  background: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+}
+
+/* Input del buscador */
+.search-box input {
+  padding: 5px 8px;
+  width: 250px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
