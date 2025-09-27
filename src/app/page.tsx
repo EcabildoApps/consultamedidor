@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import MapComponent from "./MapComponent";
 import axios from "axios";
 import "./style.css";
+import Image from 'next/image';
 
 interface Lectura {
   NRO_MEDIDOR: string;
@@ -31,32 +32,6 @@ export default function MainPage() {
         setLecturasFiltradas(response.data?.data || []);
       } catch (error) {
         console.error("Error al obtener coordenadas:", error);
-
-        // Datos de prueba mientras la API falla
-        const datosPrueba: Lectura[] = [
-          {
-            NRO_MEDIDOR: "00001",
-            NRO_CUENTA: "123",
-            CIU: "1001",
-            CONSUMIDOR: "Consumidor de prueba",
-            CEDULA_RUC: "0101010101",
-            LATITUD: -2.7801543,
-            LONGITUD: -78.7616523,
-            DIRECCION: "Dirección de prueba",
-          },
-          {
-            NRO_MEDIDOR: "00002",
-            NRO_CUENTA: "124",
-            CIU: "1002",
-            CONSUMIDOR: "Consumidor 2",
-            CEDULA_RUC: "0101010102",
-            LATITUD: -2.781,
-            LONGITUD: -78.762,
-            DIRECCION: "Otra dirección",
-          },
-        ];
-        setLecturas(datosPrueba);
-        setLecturasFiltradas(datosPrueba);
       }
     };
 
@@ -76,8 +51,14 @@ export default function MainPage() {
 
   return (
     <div className="map-container">
-      {/* Logo arriba a la izquierda */}
-      <img src="/paute.png" alt="Logo" className="logo" />
+
+      <Image
+        src="/paute.png"
+        alt="Logo"
+        className= "logo"
+        width={500}
+        height={300}
+      />
 
       {/* Buscador abajo a la derecha */}
       <div className="search-box">

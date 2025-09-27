@@ -1,7 +1,9 @@
-import type { NextConfig } from "next";
+// next.config.ts
+import { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  reactStrictMode: true,
+  output: "export", // Esto reemplaza `next export` y genera sitio estático
 };
 
 export default nextConfig;
