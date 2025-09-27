@@ -1,23 +1,17 @@
-# Usamos una imagen base de Node.js
+# Dockerfile para Next.js exportado
 FROM node:18-alpine
 
-# Crear y establecer el directorio de trabajo
+# Crear directorio de trabajo
 WORKDIR /app
 
-# Copiar los archivos del proyecto
-COPY package.json package-lock.json ./
+# Instalar serve globalmente
+RUN npm install -g serve
 
-# Instalar las dependencias
-RUN npm install --production
+# Copiar los archivos estáticos exportados
+COPY out/ /app
 
-# Copiar todos los archivos del proyecto
-COPY . .
-
-# Construir la aplicación para producción
-RUN npm run build
-
-# Exponer el puerto en el que Next.js estará corriendo
+# Exponer el puerto 3002
 EXPOSE 3002
 
-# Comando para ejecutar la aplicación en producción
-CMD ["npm", "start"]
+# Comando para servir la carpeta 'out'
+CMD ["serve", "-s", ".", "-l", "3002"]
